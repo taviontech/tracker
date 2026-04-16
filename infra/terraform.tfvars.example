@@ -1,0 +1,8 @@
+aws_region              = "us-east-1"
+project                 = "tracker"
+ec2_instance_type       = "t3.medium"
+ec2_key_pair_name       = "my-key-pair"
+ssh_allowed_cidr        = "159.224.120.173/32"
+s3_files_bucket_name    = "tracker-files-prod"
+s3_files_retention_days = 7
+ebs_volume_size_gb      = 30

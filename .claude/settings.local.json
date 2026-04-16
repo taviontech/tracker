@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(chmod:*)",
+      "Bash(mvn compile:*)",
+      "Bash(mvn package:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(docker compose up:*)",
+      "Bash(netstat:*)",
+      "Bash(tasklist:*)",
+      "Bash(powershell -Command \"Get-Process -Id 12316 | Select-Object Name, Id, Path\")",
+      "Bash(powershell -Command \"Stop-Process -Id 12316 -Force\")",
+      "Bash(powershell -Command \"Get-Process -Id \\(Get-NetTCPConnection -LocalPort 3000\\).OwningProcess | Select-Object Name, Id\")",
+      "Bash(powershell -Command \"Stop-Service -Name ''Grafana'' -Force -ErrorAction SilentlyContinue; Get-Service -Name ''Grafana*'' | Select-Object Name, Status\")",
+      "Bash(docker compose build:*)",
+      "Bash(docker compose restart:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker compose:*)",
+      "Bash(mvn test:*)",
+      "Bash(head:*)",
+      "Bash(grep:*)",
+      "Bash(curl:*)"
+    ]
+  }
+}
