@@ -113,5 +113,7 @@ jobs:
 
             docker compose -f docker-compose.aws.yml up --build -d --remove-orphans
             docker image prune -f
+
+            sudo systemctl restart nginx
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
