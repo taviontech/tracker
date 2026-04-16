@@ -70,6 +70,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
           aws ssm get-parameters-by-path \
             --region eu-west-1 \
@@ -84,8 +85,6 @@ jobs:
 
           scp -i /tmp/deploy_key -o StrictHostKeyChecking=no \
             /tmp/prod.env ubuntu@"$EC2_HOST":/tmp/prod.env
-        env:
-          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
