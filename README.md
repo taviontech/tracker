@@ -1,186 +1,146 @@
 # TrackerHub
 
-B2B SaaS платформа, совмещающая **трекер задач** (в стиле Jira) и **систему онбординга** сотрудников. Компании ведут спринты и тикеты, а параллельно создают обучающие модули и назначают их новым сотрудникам.
+A B2B SaaS project tracker for development teams. Plan sprints, manage tickets, and keep your team aligned — from backlog to done.
 
 ## Quick Start
 
 ```bash
 cp .env.example .env
-# Заполните MAIL_USERNAME, MAIL_PASSWORD, JWT_SECRET и другие переменные
+# Fill in MAIL_USERNAME, MAIL_PASSWORD, JWT_SECRET, and other variables
 docker compose up --build
 ```
 
-Доступные адреса:
+Available at:
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8080
 - **Swagger UI**: http://localhost:8080/swagger-ui.html
 
-## Архитектура
+## Architecture
 
 ```
 Browser → Next.js (3000) → Spring Boot API (8080) → PostgreSQL (5432)
                                     ↓
-                              /app/uploads  (вложения тикетов и модулей)
+                              /app/uploads  (ticket attachments)
 ```
 
-**Слои бэкенда:**
+**Backend layers:**
 ```
-api/controller  — REST-контроллеры, DTO
-service         — бизнес-логика
-domain/model    — JPA-сущности
-domain/repository — Spring Data репозитории
-infrastructure  — Security, JWT, конфигурация
+api/controller    — REST controllers, DTOs
+service           — business logic
+domain/model      — JPA entities
+domain/repository — Spring Data repositories
+infrastructure    — Security, JWT, configuration
 ```
 
-## Роли
+## Roles
 
-| Роль | Возможности |
+| Role | Capabilities |
 |------|-------------|
-| OWNER | Полный доступ, управление компанией, тарифы, платежи, приглашение всех ролей |
-| CO_OWNER | Заместитель владельца, приглашает CO_OWNER и MANAGER |
-| MANAGER | Создание модулей/групп, назначение задач, приглашение DEVELOPER |
-| DEVELOPER | Работа с тикетами и спринтами, прохождение назначенных модулей |
-| ADMIN | Системный администратор, доступ ко всем компаниям |
+| OWNER | Full access, company management, plans, invite all roles |
+| CO_OWNER | Deputy owner, invites CO_OWNER and MANAGER |
+| MANAGER | Create sprints, assign tickets, invite DEVELOPER |
+| DEVELOPER | Work with tickets and sprints |
+| ADMIN | System administrator, access to all companies |
 
-## Функциональность
+## Features
 
-**Трекер задач (Jira-подобный)**
-- Спринты со статусами: `PLANNING` → `ACTIVE` → `COMPLETED`
-- Тикеты с типами: `TASK`, `BUG`, `STORY`, `EPIC`, `SUBTASK`
-- Приоритеты: `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`
-- Статусы тикетов: `TODO` → `IN_PROGRESS` → `IN_REVIEW` → `DONE`
-- Комментарии и вложения к тикетам
-- Story points, репортёр и исполнитель
-- Уникальный номер тикета с префиксом компании (например, `PROJ-42`)
-- Kanban-борды по спринтам
+**Sprint Management**
+- Sprint statuses: `PLANNING` → `ACTIVE` → `PAUSED` → `COMPLETED`
+- Create, start, pause, resume, and complete sprints
+- Kanban boards per sprint with customizable columns
 
-**Онбординг**
-- Конструктор блоков: `text`, `video`, `image`, `file`, `callout`, `checklist`, `quiz`, `divider`
-- Квизы: одиночный/множественный выбор, политики попыток (`SINGLE` / `UNLIMITED`)
-- Группировка модулей с упорядочиванием
-- Назначение модулей или групп конкретным пользователям с датами
-- Отслеживание прогресса по каждому модулю и группе
-- Email-уведомление менеджеру при завершении модуля
+**Ticket Tracking**
+- Types: `TASK`, `BUG`, `STORY`, `EPIC`, `SUBTASK`
+- Priorities: `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`
+- Statuses: `TODO` → `IN_PROGRESS` → `IN_REVIEW` → `DONE`
+- Comments and file attachments
+- Story points, reporter, and assignee
+- Unique ticket number with company prefix (e.g. `PROJ-42`)
+- Change history log
 
-**Команда и приглашения**
-- Приглашение по email с верификацией через токен
-- Роли разработчика (`devRoles`) — специализации внутри компании
-- Активация/деактивация участников
-- Поддержка нескольких компаний на одного пользователя
-
-**Тарифы и оплата**
-- Тарифные планы с подписками
-- Оплата криптовалютой (BTC, ETH, USDT ERC-20/BEP-20/TRC-20, SOL, TON)
+**Team & Invitations**
+- Email invitations with token verification
+- Member activation/deactivation
+- Multiple companies per user
 
 ## API
 
 ```
-POST /api/auth/register                       — Регистрация + создание компании
-POST /api/auth/login                          — Вход (HttpOnly cookie)
-POST /api/auth/logout                         — Выход
-GET  /api/auth/me                             — Текущий пользователь
-GET  /api/auth/verify-email?token=            — Верификация email
-POST /api/auth/forgot-password                — Запрос сброса пароля
-POST /api/auth/reset-password                 — Сброс пароля
+POST /api/auth/register                        — Register + create company
+POST /api/auth/login                           — Login (HttpOnly cookie)
+POST /api/auth/logout                          — Logout
+GET  /api/auth/me                              — Current user
+GET  /api/auth/verify-email?token=             — Email verification
+POST /api/auth/forgot-password                 — Request password reset
+POST /api/auth/reset-password                  — Reset password
 
-GET  /api/sprints?companyId=                  — Список спринтов
-POST /api/sprints?companyId=                  — Создать спринт
-PATCH /api/sprints/{id}/status                — Изменить статус спринта
-DELETE /api/sprints/{id}                      — Удалить спринт
+GET  /api/sprints?companyId=                   — List sprints
+POST /api/sprints?companyId=                   — Create sprint
+PATCH /api/sprints/{id}/status                 — Change sprint status
+DELETE /api/sprints/{id}                       — Delete sprint
 
-GET  /api/tickets?companyId=&sprintId=        — Список тикетов
-GET  /api/tickets/{id}                        — Получить тикет
-POST /api/tickets?companyId=                  — Создать тикет
-PUT  /api/tickets/{id}                        — Обновить тикет
-PATCH /api/tickets/{id}/status                — Изменить статус тикета
-DELETE /api/tickets/{id}                      — Удалить тикет
-POST /api/tickets/{id}/comments               — Добавить комментарий
-DELETE /api/tickets/comments/{commentId}      — Удалить комментарий
-POST /api/tickets/{id}/attachments            — Добавить вложение
-DELETE /api/tickets/attachments/{attachmentId} — Удалить вложение
+GET  /api/tickets?companyId=&sprintId=         — List tickets
+GET  /api/tickets/{id}                         — Get ticket
+POST /api/tickets?companyId=                   — Create ticket
+PUT  /api/tickets/{id}                         — Update ticket
+PATCH /api/tickets/{id}/status                 — Change ticket status
+DELETE /api/tickets/{id}                       — Delete ticket
+POST /api/tickets/{id}/comments                — Add comment
+DELETE /api/tickets/comments/{commentId}       — Delete comment
+POST /api/tickets/{id}/attachments             — Add attachment
+DELETE /api/tickets/attachments/{attachmentId} — Remove attachment
 
-GET  /api/modules?companyId=                  — Список модулей компании
-GET  /api/modules/{id}                        — Получить модуль
-POST /api/modules?companyId=                  — Создать модуль
-PUT  /api/modules/{id}                        — Обновить модуль
-DELETE /api/modules/{id}                      — Удалить модуль
+POST /api/invitations?companyId=               — Invite user
+GET  /api/invitations?companyId=               — List invitations
+DELETE /api/invitations/{id}                   — Cancel invitation
+GET  /api/invitations/validate?token=          — Validate invitation token
+POST /api/invitations/accept                   — Accept invitation
 
-GET  /api/groups?companyId=                   — Список групп
-POST /api/groups?companyId=                   — Создать группу
-PUT  /api/groups/{id}                         — Обновить группу
-DELETE /api/groups/{id}                       — Удалить группу
-POST /api/groups/{groupId}/modules/{moduleId} — Добавить модуль в группу
-DELETE /api/groups/{groupId}/modules/{moduleId} — Убрать модуль из группы
-PATCH /api/groups/{groupId}/modules/reorder   — Изменить порядок модулей
+GET  /api/team?companyId=                      — List team members
+PATCH /api/team/{userId}/deactivate            — Deactivate member
+PATCH /api/team/{userId}/activate              — Activate member
 
-POST /api/assignments                         — Назначить группу пользователю
-POST /api/assignments/module                  — Назначить модуль пользователю
-GET  /api/assignments/my?companyId=           — Мои назначения (группы)
-GET  /api/assignments/my/modules              — Мои назначения (модули)
-DELETE /api/assignments/{id}                  — Снять назначение группы
-DELETE /api/assignments/module/{id}           — Снять назначение модуля
-
-POST /api/progress/modules/{id}/start         — Начать модуль
-POST /api/progress/modules/{id}/complete      — Завершить модуль
-GET  /api/progress/my/modules                 — Мой прогресс по модулям
-GET  /api/progress/my/groups                  — Мой прогресс по группам
-
-POST /api/quiz/questions/{id}/attempt         — Ответить на вопрос квиза
-
-POST /api/files/upload                        — Загрузить файл
-
-POST /api/invitations?companyId=              — Пригласить пользователя
-GET  /api/invitations?companyId=              — Список приглашений
-DELETE /api/invitations/{id}                  — Отменить приглашение
-GET  /api/invitations/validate?token=         — Проверить токен приглашения
-POST /api/invitations/accept                  — Принять приглашение
-
-GET  /api/team?companyId=                     — Список участников команды
-PATCH /api/team/{userId}/dev-roles            — Обновить роли разработчика
-PATCH /api/team/{userId}/deactivate           — Деактивировать участника
-PATCH /api/team/{userId}/activate             — Активировать участника
-
-GET  /api/plans                               — Доступные тарифы
-GET  /api/wallet                              — Реквизиты для оплаты
-GET  /api/profile                             — Профиль пользователя
-PUT  /api/profile                             — Обновить профиль
-POST /api/contact                             — Форма обратной связи
-GET  /api/admin/users                         — Все пользователи (admin)
+GET  /api/plans                                — Available plans
+GET  /api/wallet                               — Crypto wallet addresses
+GET  /api/profile                              — User profile
+PUT  /api/profile                              — Update profile
+POST /api/contact                              — Contact form
+GET  /api/admin/users                          — All users (admin)
+POST /api/files/upload                         — Upload file
 ```
 
-## Стек
+## Stack
 
 - **Backend**: Java 21, Spring Boot 3.2, Spring Security, Spring Data JPA, Flyway, MapStruct, JavaMailSender
-- **Auth**: JWT в HttpOnly cookies, верификация email, сброс пароля
-- **Database**: PostgreSQL 16 (Flyway, 1 миграция)
-- **Frontend**: Next.js 14 App Router, TypeScript, TailwindCSS, TanStack Query v5, React Hook Form + Zod
+- **Auth**: JWT in HttpOnly cookies, email verification, password reset
+- **Database**: PostgreSQL 16 (Flyway migrations)
+- **Frontend**: Next.js 14 App Router, TypeScript, TailwindCSS, React Hook Form + Zod
 - **i18n**: next-intl (English, Russian, Ukrainian)
 - **Infrastructure**: Docker, Docker Compose, Spring Actuator (healthcheck)
 
-## Тесты
+## Tests
 
 ```bash
 cd backend && mvn test
 ```
 
-## Переменные окружения
+## Environment Variables
 
-| Переменная | Описание |
-|-----------|----------|
-| `POSTGRES_DB / USER / PASSWORD` | Параметры PostgreSQL |
-| `JWT_SECRET` | Секрет для подписи токенов (минимум 64 символа) |
-| `JWT_EXPIRY_HOURS` | Срок жизни токена (по умолчанию 24) |
-| `CORS_ALLOWED_ORIGINS` | Разрешённые origins для CORS |
-| `FRONTEND_URL` | URL фронтенда (для ссылок в письмах) |
-| `NEXT_PUBLIC_API_URL` | URL бэкенда для фронтенда |
-| `MAIL_HOST / PORT / USERNAME / PASSWORD` | SMTP для уведомлений |
-| `CONTACT_RECIPIENT_EMAIL` | Email получателя формы обратной связи |
-| `WALLET_*` | Адреса криптокошельков для оплаты |
+| Variable | Description |
+|----------|-------------|
+| `POSTGRES_DB / USER / PASSWORD` | PostgreSQL credentials |
+| `JWT_SECRET` | Token signing secret (min 64 characters) |
+| `JWT_EXPIRY_HOURS` | Token lifetime (default: 24) |
+| `CORS_ALLOWED_ORIGINS` | Allowed CORS origins |
+| `FRONTEND_URL` | Frontend URL (used in email links) |
+| `NEXT_PUBLIC_API_URL` | Backend URL for the frontend |
+| `MAIL_HOST / PORT / USERNAME / PASSWORD` | SMTP for notifications |
+| `CONTACT_RECIPIENT_EMAIL` | Recipient email for the contact form |
+| `WALLET_*` | Crypto wallet addresses for donations |
 
 ## Production
 
-- Замените `JWT_SECRET` на длинную случайную строку
-- Настройте SMTP-провайдера (Gmail App Password или другой)
-- Включите HTTPS и обновите `CORS_ALLOWED_ORIGINS` и `FRONTEND_URL`
-- Настройте volume для `/app/uploads` с резервным копированием
-- Смените адреса кошельков в переменных `WALLET_*`
+- Replace `JWT_SECRET` with a long random string
+- Configure an SMTP provider (Gmail App Password or similar)
+- Enable HTTPS and update `CORS_ALLOWED_ORIGINS` and `FRONTEND_URL`
+- Mount a volume for `/app/uploads` with backups

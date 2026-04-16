@@ -101,14 +101,23 @@
     "contactBtn": "Написати нам"
   },
   "contact": {
-    "title": "Зв'яжіться з нами",
-    "nameLabel": "Ваше ім'я",
-    "emailLabel": "Email",
-    "phoneLabel": "Телефон (необов'язково)",
-    "messageLabel": "Повідомлення",
-    "sendBtn": "Надіслати",
-    "successMessage": "Дякуємо! Ми зв'яжемося з вами найближчим часом.",
-    "errorMessage": "Щось пішло не так. Будь ласка, спробуйте ще раз."
+    "title": "Написати нам",
+    "successTitle": "Повідомлення надіслано!",
+    "successDesc": "Дякуємо! Ми зв'яжемося з вами найближчим часом.",
+    "name": "Ім'я",
+    "namePlaceholder": "Ваше ім'я",
+    "email": "Email",
+    "emailPlaceholder": "ваш@email.com",
+    "category": "Категорія",
+    "categoryGeneral": "Загальне питання",
+    "categoryBug": "Повідомити про помилку",
+    "categoryPartnership": "Партнерство",
+    "categoryOther": "Інше",
+    "message": "Повідомлення",
+    "messagePlaceholder": "Чим ми можемо допомогти?",
+    "error": "Щось пішло не так. Спробуйте ще раз.",
+    "sending": "Надсилання...",
+    "send": "Надіслати"
   },
   "donate": {
     "title": "Підтримайте TrackerHub",
