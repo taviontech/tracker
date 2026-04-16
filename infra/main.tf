@@ -9,9 +9,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "tracker-terraform-state"
+    bucket         = "taviontech-tracker-tfstate"
     key            = "prod/terraform.tfstate"
-    region         = "us-east-1"
+    region         = "eu-west-1"
     dynamodb_table = "tracker-terraform-locks"
     encrypt        = true
   }

@@ -4,7 +4,7 @@ data "aws_vpc" "default" {
 
 resource "aws_security_group" "ec2" {
   name        = "${var.project}-ec2"
-  description = "TrackerHub EC2"
+  description = "Tracker EC2"
   vpc_id      = data.aws_vpc.default.id
 
   ingress {

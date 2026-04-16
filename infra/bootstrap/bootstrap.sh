@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-REGION="us-east-1"
-STATE_BUCKET="tracker-terraform-state"
+REGION="eu-west-1"
+STATE_BUCKET="taviontech-tracker-tfstate"
 LOCK_TABLE="tracker-terraform-locks"
 
 echo "Creating S3 state bucket: $STATE_BUCKET"
@@ -38,5 +38,5 @@ aws dynamodb create-table \
 echo ""
 echo "Done. Now run from the infra/ directory:"
 echo "  terraform init"
-echo "  terraform plan -var='ec2_key_pair_name=YOUR_KEY_PAIR'"
-echo "  terraform apply -var='ec2_key_pair_name=YOUR_KEY_PAIR'"
+echo "  terraform plan -var-file=terraform.tfvars"
+echo "  terraform apply -var-file=terraform.tfvars"

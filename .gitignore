@@ -27,3 +27,9 @@ Thumbs.db
 
 # Claude Code
 .claude/
+
+# Terraform
+infra/.terraform/
+infra/.terraform.lock.hcl
+infra/terraform.tfvars
+infra/terraform.tfstate*
