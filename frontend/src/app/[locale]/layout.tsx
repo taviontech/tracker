@@ -26,7 +26,7 @@ export default async function LocaleLayout({
         <div className="bg-blob-1" />
         <div className="bg-blob-2" />
 
-        <div className="relative z-10 min-h-screen flex flex-col">
+        <div className="relative z-10 min-h-screen flex flex-col noise-overlay">
           <Header />
           <main className="flex-1">
             {children}

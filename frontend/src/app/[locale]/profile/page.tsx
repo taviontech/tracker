@@ -93,7 +93,12 @@ export default function ProfilePage() {
   };
 
   if (isLoading) return (
-    <div className="flex justify-center py-24"><div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>
+    <div className="flex justify-center py-24">
+      <div className="relative">
+        <div className="w-10 h-10 border-2 border-blue-500/30 rounded-full" />
+        <div className="absolute inset-0 w-10 h-10 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    </div>
   );
 
   const p = profile ?? {} as any;
@@ -101,17 +106,22 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-12">
-      <h1 className="text-3xl font-bold text-white mb-8">{t('title')}</h1>
+      <div className="mb-8 animate-fade-in-up">
+        <div className="flex items-center gap-3 mb-1">
+          <div className="w-2 h-2 rounded-full bg-blue-400" />
+          <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
+        </div>
+      </div>
 
       {/* Avatar section */}
-      <div className="glass-card rounded-2xl p-6 mb-6">
+      <div className="gradient-border-card rounded-2xl p-6 mb-6 animate-fade-in-up animate-delay-100">
         <div className="flex items-center gap-5">
           <div className="relative shrink-0">
             {p.avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={p.avatarUrl} alt="avatar" className="w-16 h-16 rounded-full object-cover border-2 border-blue-500/30" />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-blue-500/20 border-2 border-blue-500/30 flex items-center justify-center text-xl font-bold text-blue-300">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/30 to-blue-600/30 border-2 border-blue-500/40 flex items-center justify-center text-xl font-bold text-blue-300 animate-glow">
                 {initials}
               </div>
             )}
@@ -143,7 +153,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Info fields */}
-      <div className="glass-card rounded-2xl divide-y divide-white/[0.06] mb-6">
+      <div className="glass-card rounded-2xl divide-y divide-white/[0.06] mb-6 animate-fade-in-up animate-delay-200">
         {[
           { key: 'name', label: t('fullName'), value: `${p.firstName ?? ''} ${p.lastName ?? ''}`.trim() || '—', editable: true },
           { key: 'email', label: t('email'), value: p.email ?? '—', editable: false },
@@ -239,7 +249,7 @@ export default function ProfilePage() {
       )}
 
       {/* Change Password */}
-      <div className="glass-card rounded-2xl p-6">
+      <div className="glass-card rounded-2xl p-6 animate-fade-in-up animate-delay-400">
         <h2 className="text-sm font-semibold text-white mb-4">{t('changePasswordBtn')}</h2>
         <div className="space-y-3">
           <input type="password" value={pwForm.current} onChange={e => setPwForm(f => ({ ...f, current: e.target.value }))} className="input-dark" placeholder={t('currentPasswordPlaceholder')} />

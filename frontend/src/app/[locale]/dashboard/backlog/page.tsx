@@ -154,11 +154,27 @@ export default function BacklogPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
+      <div className="flex items-center justify-between mb-8 animate-fade-in-up">
+        <div>
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-2 h-2 rounded-full bg-blue-400" />
+            <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
+          </div>
+          {backlogTickets && (
+            <p className="text-slate-500 text-sm pl-5">{backlogTickets.length} tickets</p>
+          )}
+        </div>
+        {canManage && (
+          <button onClick={() => setShowCreateSprint(true)} className="px-4 py-2 btn-primary rounded-xl text-sm font-semibold inline-flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            {t('createSprint')}
+          </button>
+        )}
       </div>
 
-      <div className="relative max-w-xs mb-5">
+      <div className="relative max-w-xs mb-5 animate-fade-in-up animate-delay-100">
         <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
@@ -173,7 +189,10 @@ export default function BacklogPage() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <div className="relative">
+            <div className="w-10 h-10 border-2 border-blue-500/30 rounded-full" />
+            <div className="absolute inset-0 w-10 h-10 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          </div>
         </div>
       ) : items.length === 0 ? (
         <div className="text-center py-16 text-slate-500">

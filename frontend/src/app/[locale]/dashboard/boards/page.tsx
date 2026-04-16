@@ -93,24 +93,39 @@ export default function BoardsPage() {
   if (isLoading || (sprints && sprints.some(s => s.status === 'ACTIVE') && !redirected)) {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-8rem)]">
-        <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        <div className="relative">
+          <div className="w-10 h-10 border-2 border-blue-500/30 rounded-full" />
+          <div className="absolute inset-0 w-10 h-10 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8 animate-fade-in-up">
+        <div>
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-2 h-2 rounded-full bg-blue-400" />
+            <h1 className="text-3xl font-bold text-white">{t('title')}</h1>
+          </div>
+          {sprints && (
+            <p className="text-slate-500 text-sm pl-5">{sprints.length} {t('title').toLowerCase()}</p>
+          )}
+        </div>
         {canManage && (
-          <button onClick={() => setShowForm(!showForm)} className="px-5 py-2.5 btn-primary rounded-xl text-sm font-semibold">
+          <button onClick={() => setShowForm(!showForm)} className="px-5 py-2.5 btn-primary rounded-xl text-sm font-semibold inline-flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
             {t('newSprint')}
           </button>
         )}
       </div>
 
       {showForm && (
-        <div className="glass-card rounded-2xl p-6 mb-6">
+        <div className="gradient-border-card rounded-2xl p-6 mb-6 animate-fade-in-up">
           <h2 className="text-sm font-semibold text-white mb-4">{t('createSprintTitle')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
@@ -122,12 +137,19 @@ export default function BoardsPage() {
             <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="input-dark w-full" />
             <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="input-dark w-full" />
           </div>
-          {error && <p className="mt-2 text-sm text-red-400">⚠ {error}</p>}
+          {error && (
+            <p className="mt-3 text-sm text-red-400 flex items-center gap-1.5">
+              <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              {error}
+            </p>
+          )}
           <div className="flex gap-3 mt-4">
             <button onClick={() => createMutation.mutate()} disabled={!name || createMutation.isPending} className="px-5 py-2 btn-primary rounded-xl text-sm font-semibold disabled:opacity-50">
               {createMutation.isPending ? t('creating') : t('createSprintBtn')}
             </button>
-            <button onClick={() => setShowForm(false)} className="px-5 py-2 rounded-xl text-sm text-slate-400 border border-white/10 hover:bg-white/5">
+            <button onClick={() => setShowForm(false)} className="px-5 py-2 rounded-xl text-sm text-slate-400 border border-white/10 hover:bg-white/5 transition-all">
               {t('cancel')}
             </button>
           </div>
@@ -135,7 +157,7 @@ export default function BoardsPage() {
       )}
 
       {/* Status filter + search */}
-      <div className="flex flex-col gap-3 mb-5">
+      <div className="flex flex-col gap-3 mb-6 animate-fade-in-up animate-delay-100">
         <div className="flex flex-wrap gap-2">
           {STATUS_FILTER_KEYS.map(f => (
             <button
@@ -170,8 +192,20 @@ export default function BoardsPage() {
 
       {filtered.length > 0 ? (
         <div className="space-y-3">
-          {filtered.map(sprint => (
-            <div key={sprint.id} className="glass-card rounded-xl px-5 py-4 flex items-center gap-4">
+          {filtered.map((sprint, i) => (
+            <div
+              key={sprint.id}
+              className="gradient-border-card rounded-xl px-5 py-4 flex items-center gap-4 animate-fade-in-up"
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
+              {/* Status indicator */}
+              <div className={`w-1.5 h-10 rounded-full shrink-0 ${
+                sprint.status === 'ACTIVE' ? 'bg-blue-400' :
+                sprint.status === 'PAUSED' ? 'bg-amber-400' :
+                sprint.status === 'COMPLETED' ? 'bg-slate-500' :
+                'bg-violet-400'
+              }`} />
+
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-1">
                   <Link href={lp(`/dashboard/boards/${sprint.id}`)} className="text-sm font-semibold text-white hover:text-blue-300 transition-colors">
@@ -183,7 +217,10 @@ export default function BoardsPage() {
                 </div>
                 {sprint.goal && <p className="text-xs text-slate-500 truncate">{sprint.goal}</p>}
                 {(sprint.startDate || sprint.endDate) && (
-                  <p className="text-xs text-slate-600 mt-1">
+                  <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
                     {sprint.startDate && `${t('sprintStart')}: ${new Date(sprint.startDate).toLocaleDateString()}`}
                     {sprint.startDate && sprint.endDate && ' · '}
                     {sprint.endDate && `${t('sprintEnd')}: ${new Date(sprint.endDate).toLocaleDateString()}`}
@@ -191,31 +228,31 @@ export default function BoardsPage() {
                 )}
               </div>
               <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
-                <Link href={lp(`/dashboard/boards/${sprint.id}`)} className="text-xs px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:bg-white/5 transition-all">
+                <Link href={lp(`/dashboard/boards/${sprint.id}`)} className="text-xs px-3 py-1.5 rounded-lg border border-white/10 text-slate-300 hover:bg-white/5 hover:border-blue-500/20 transition-all">
                   {t('openBoard')}
                 </Link>
                 {canManage && sprint.status === 'PLANNING' && (
-                  <button onClick={() => updateStatus.mutate({ id: sprint.id, status: 'ACTIVE' })} className="text-xs px-3 py-1.5 rounded-lg border border-blue-500/30 text-blue-400 hover:bg-blue-500/10">
+                  <button onClick={() => updateStatus.mutate({ id: sprint.id, status: 'ACTIVE' })} className="text-xs px-3 py-1.5 rounded-lg border border-blue-500/30 text-blue-400 hover:bg-blue-500/10 transition-all">
                     {t('start')}
                   </button>
                 )}
                 {canManage && sprint.status === 'ACTIVE' && (
                   <>
-                    <button onClick={() => updateStatus.mutate({ id: sprint.id, status: 'PAUSED' })} className="text-xs px-3 py-1.5 rounded-lg border border-amber-500/30 text-amber-400 hover:bg-amber-500/10">
+                    <button onClick={() => updateStatus.mutate({ id: sprint.id, status: 'PAUSED' })} className="text-xs px-3 py-1.5 rounded-lg border border-amber-500/30 text-amber-400 hover:bg-amber-500/10 transition-all">
                       {t('pause')}
                     </button>
-                    <button onClick={() => updateStatus.mutate({ id: sprint.id, status: 'COMPLETED' })} className="text-xs px-3 py-1.5 rounded-lg border border-slate-500/30 text-slate-400 hover:bg-slate-500/10">
+                    <button onClick={() => updateStatus.mutate({ id: sprint.id, status: 'COMPLETED' })} className="text-xs px-3 py-1.5 rounded-lg border border-slate-500/30 text-slate-400 hover:bg-slate-500/10 transition-all">
                       {t('complete')}
                     </button>
                   </>
                 )}
                 {canManage && sprint.status === 'PAUSED' && (
-                  <button onClick={() => updateStatus.mutate({ id: sprint.id, status: 'ACTIVE' })} className="text-xs px-3 py-1.5 rounded-lg border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
+                  <button onClick={() => updateStatus.mutate({ id: sprint.id, status: 'ACTIVE' })} className="text-xs px-3 py-1.5 rounded-lg border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 transition-all">
                     {t('resume')}
                   </button>
                 )}
                 {canManage && (
-                  <button onClick={() => deleteMutation.mutate(sprint.id)} className="text-xs px-3 py-1.5 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10">
+                  <button onClick={() => deleteMutation.mutate(sprint.id)} className="text-xs px-3 py-1.5 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all">
                     {t('delete')}
                   </button>
                 )}
@@ -224,9 +261,14 @@ export default function BoardsPage() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 text-slate-500">
-          <p className="text-lg mb-2">{statusFilter === 'ALL' ? t('noSprintsYet') : t('noFilterSprints')}</p>
-          {statusFilter === 'ALL' && <p className="text-sm">{t('createFirst')}</p>}
+        <div className="glass-card rounded-2xl py-20 text-center animate-fade-in-up">
+          <div className="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto mb-4">
+            <svg className="w-7 h-7 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+            </svg>
+          </div>
+          <p className="text-white font-semibold mb-2">{statusFilter === 'ALL' ? t('noSprintsYet') : t('noFilterSprints')}</p>
+          {statusFilter === 'ALL' && <p className="text-sm text-slate-500">{t('createFirst')}</p>}
         </div>
       )}
     </div>
