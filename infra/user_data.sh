@@ -39,9 +39,9 @@ rm -f /etc/nginx/sites-enabled/default
 cat > /etc/nginx/sites-available/${project} <<'NGINX'
 server {
     listen 80;
-    server_name tavionconvert.com www.tavionconvert.com;
+    server_name _;
 
-    client_max_body_size 2100M;
+    client_max_body_size 50M;
 
     location /api/ {
         proxy_pass         http://127.0.0.1:8080;
@@ -50,22 +50,6 @@ server {
         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header   X-Forwarded-Proto $scheme;
         proxy_read_timeout 60s;
-    }
-
-    location /oauth2/ {
-        proxy_pass         http://127.0.0.1:8080;
-        proxy_set_header   Host $host;
-        proxy_set_header   X-Real-IP $remote_addr;
-        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header   X-Forwarded-Proto $scheme;
-    }
-
-    location /login/oauth2/ {
-        proxy_pass         http://127.0.0.1:8080;
-        proxy_set_header   Host $host;
-        proxy_set_header   X-Real-IP $remote_addr;
-        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header   X-Forwarded-Proto $scheme;
     }
 
     location /actuator/ {
@@ -86,4 +70,4 @@ NGINX
 ln -s /etc/nginx/sites-available/${project} /etc/nginx/sites-enabled/${project}
 nginx -t && systemctl reload nginx
 
-echo "Bootstrap complete" >> /var/log/tracker-bootstrap.log
+echo "Bootstrap complete" >> /var/log/${project}-bootstrap.log

@@ -1,20 +1,5 @@
-data "aws_ami" "ubuntu_22" {
-  most_recent = true
-  owners      = ["099720109477"]
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
 resource "aws_instance" "app" {
-  ami                    = data.aws_ami.ubuntu_22.id
+  ami                    = "ami-0ec2a5ff1be0688fa" # Ubuntu 22.04 LTS eu-west-1, pinned 2026-03-31
   instance_type          = var.ec2_instance_type
   key_name               = var.ec2_key_pair_name
   vpc_security_group_ids = [aws_security_group.ec2.id]

@@ -40,16 +40,3 @@ PUBLIC_IP=$(aws ec2 describe-instances \
   --output text)
 
 echo "Public IP: $PUBLIC_IP"
-echo "Waiting for HTTP to be ready..."
-
-for i in $(seq 1 30); do
-  if curl -sf --max-time 3 --resolve "tavionconvert.com:443:$PUBLIC_IP" "https://tavionconvert.com/" > /dev/null 2>&1; then
-    echo "Server is up at https://tavionconvert.com"
-    exit 0
-  fi
-  echo "  attempt $i/30..."
-  sleep 10
-done
-
-echo "Server did not respond after 5 minutes. Check Docker logs on the instance."
-exit 1

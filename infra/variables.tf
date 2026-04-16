@@ -10,7 +10,7 @@ variable "project" {
 
 variable "ec2_instance_type" {
   type    = string
-  default = "t3.medium"
+  default = "t3.small"
 }
 
 variable "ec2_key_pair_name" {
@@ -20,16 +20,6 @@ variable "ec2_key_pair_name" {
 variable "ssh_allowed_cidr" {
   type    = string
   default = "0.0.0.0/0"
-}
-
-variable "s3_files_bucket_name" {
-  type    = string
-  default = "tracker-files-prod"
-}
-
-variable "s3_files_retention_days" {
-  type    = number
-  default = 7
 }
 
 variable "ebs_volume_size_gb" {
