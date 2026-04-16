@@ -7,6 +7,7 @@ import Header from '../../components/layout/Header';
 import AuthModal from '../../components/auth/AuthModal';
 import ContactModal from '../../components/contact/ContactModal';
 import FooterContactButton from '../../components/contact/FooterContactButton';
+import HeroCanvas from '../../components/landing/HeroCanvas';
 
 const locales = ['en', 'ru', 'uk'];
 
@@ -23,6 +24,7 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <Providers>
+        <HeroCanvas />
         <div className="bg-blob-1" />
         <div className="bg-blob-2" />
 

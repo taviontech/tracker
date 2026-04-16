@@ -23,16 +23,14 @@ export default function HeroCanvas() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const setSize = () => {
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     setSize();
 
-    const W = () => canvas.offsetWidth;
-    const H = () => canvas.offsetHeight;
+    const W = () => window.innerWidth;
+    const H = () => window.innerHeight;
 
     const N = 70;
     const MAX_DIST = 140;
@@ -50,11 +48,10 @@ export default function HeroCanvas() {
     let mouseY = -1000;
 
     const onMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseX = e.clientX - rect.left;
-      mouseY = e.clientY - rect.top;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
     };
-    canvas.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mousemove', onMouseMove);
 
     const tick = () => {
       const w = W();
@@ -130,14 +127,14 @@ export default function HeroCanvas() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', onResize);
-      canvas.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mousemove', onMouseMove);
     };
   }, []);
 
   return (
     <canvas
       ref={ref}
-      className="absolute inset-0 w-full h-full pointer-events-auto"
+      className="fixed inset-0 w-full h-full pointer-events-none"
       style={{ opacity: 0.55 }}
     />
   );

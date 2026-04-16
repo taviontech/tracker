@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server';
 import CTAButtons from '../../components/landing/CTAButtons';
-import HeroCanvas from '../../components/landing/HeroCanvas';
 import TiltCard from '../../components/ui/TiltCard';
 
 export default async function HomePage({ params: { locale } }: { params: { locale: string } }) {
@@ -12,9 +11,6 @@ export default async function HomePage({ params: { locale } }: { params: { local
     <div className="relative">
       {/* ─── Hero ─── */}
       <section className="relative overflow-hidden pt-24 pb-32 px-6 min-h-[92vh] flex items-center">
-        {/* Particle canvas */}
-        <HeroCanvas />
-
         {/* Perspective grid */}
         <div className="hero-grid">
           <div className="hero-grid-inner" />
@@ -180,13 +176,6 @@ export default async function HomePage({ params: { locale } }: { params: { local
                 </div>
                 <h3 className="text-base font-semibold text-white mb-2">{item.title}</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
-                {i < 2 && (
-                  <div className="hidden md:block absolute top-1/2 -right-3.5 -translate-y-1/2 w-7 h-7 z-10 bg-[#0a0f1e] rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-blue-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                )}
               </div>
             ))}
           </div>
@@ -243,24 +232,6 @@ export default async function HomePage({ params: { locale } }: { params: { local
             ))}
           </div>
 
-          {/* Extra features row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            {[
-              { icon: '🔁', label: 'Sprint Management' },
-              { icon: '🏷️', label: 'Ticket Types & Priority' },
-              { icon: '💬', label: 'Comments & Threads' },
-              { icon: '📎', label: 'File Attachments' },
-            ].map((f, i) => (
-              <div
-                key={f.label}
-                className="glass-card-hover rounded-xl p-4 flex items-center gap-3 animate-fade-in-up"
-                style={{ animationDelay: `${360 + i * 80}ms` }}
-              >
-                <span className="text-xl">{f.icon}</span>
-                <span className="text-sm text-slate-300 font-medium">{f.label}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
