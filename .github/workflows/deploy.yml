@@ -93,6 +93,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: GH_TOKEN
+          command_timeout: 40m
           script: |
             set -euo pipefail
             APP_DIR=/home/ubuntu/tracker
@@ -114,6 +115,13 @@ jobs:
             docker compose -f docker-compose.aws.yml up --build -d --remove-orphans
             docker image prune -f
 
-            sudo systemctl restart nginx
+            # Ensure nginx server_name is set to the real domain (fixes EC2s bootstrapped before domain was configured)
+            sudo sed -i 's/server_name _;/server_name taviontracker.com www.taviontracker.com;/' /etc/nginx/sites-available/tracker
+            sudo nginx -t && sudo systemctl reload nginx
+
+            # Ensure SSL cert is installed after any nginx config changes
+            sudo certbot --nginx -d taviontracker.com -d www.taviontracker.com \
+              --non-interactive --agree-tos --email illia.hrechyshchev@taviontech.com \
+              --redirect --keep-until-expiring 2>&1 | tail -5
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

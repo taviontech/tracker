@@ -37,8 +37,8 @@ $SSH "cd $APP_DIR && \
 
 echo "==> Waiting for the app to respond..."
 for i in $(seq 1 18); do
-  if curl -sf --max-time 5 "http://$EC2_HOST/" > /dev/null 2>&1; then
-    echo "==> Done! App is live."
+  if curl -sf --max-time 5 --resolve "taviontracker.com:443:$EC2_HOST" "https://taviontracker.com/" > /dev/null 2>&1; then
+    echo "==> Done! App is live at https://taviontracker.com"
     exit 0
   fi
   echo "  waiting... ($i/18)"

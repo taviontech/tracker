@@ -39,7 +39,7 @@ rm -f /etc/nginx/sites-enabled/default
 cat > /etc/nginx/sites-available/${project} <<'NGINX'
 server {
     listen 80;
-    server_name _;
+    server_name taviontracker.com www.taviontracker.com;
 
     client_max_body_size 50M;
 
